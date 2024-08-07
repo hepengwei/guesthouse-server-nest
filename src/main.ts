@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalFilter(app.get(WINSTON_MODULE_NEST_PROVIDER)));
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // 去除类上不存在的字段
+      whitelist: true, // 获取到的dto对象中会去除掉DTO类上不存在的字段
     }),
   );
   await app.listen(7001);

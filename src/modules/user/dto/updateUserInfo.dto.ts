@@ -1,25 +1,14 @@
-import {
-  IsOptional,
-  IsString,
-  MaxLength,
-  IsUrl,
-  IsPhoneNumber,
-} from 'class-validator';
+import { IsString, MaxLength, IsPhoneNumber } from 'class-validator';
+import AllowEmptyString from '@/utils/validator/AllowEmptyString';
 
 export default class UpdateUserInfoDto {
-  @IsUrl(
-    {},
-    {
-      message: '头像地址格式不正确',
-    },
-  )
   @MaxLength(255, {
     message: `头像地址支持的最大长度为$constraint1`,
   })
   @IsString({
     message: '头像地址应该为字符串类型',
   })
-  @IsOptional()
+  @AllowEmptyString()
   avatar?: string;
 
   @IsPhoneNumber('CN', {
@@ -28,6 +17,6 @@ export default class UpdateUserInfoDto {
   @IsString({
     message: '手机号应该为字符串类型',
   })
-  @IsOptional()
+  @AllowEmptyString()
   phone?: string;
 }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import BaseController from '../base/base.controller';
 import SearchGuesthouseDto from './dto/searchGuesthouse.dto';
@@ -24,7 +32,7 @@ export default class GuesthouseController extends BaseController {
 
   @Get('detail/:id')
   @UseGuards(AuthGuard('jwt'))
-  async detail(@Param('id') id: string) {
+  async detail(@Param('id', ParseIntPipe) id: number) {
     const res = await this.guesthouseService.detail(id);
     return this.success(res);
   }

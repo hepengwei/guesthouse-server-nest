@@ -1,6 +1,14 @@
-import { Controller, Post, UseGuards, Body, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  // UseInterceptors,
+  Body,
+  Req,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import BaseController from '../base/base.controller';
+// import CustomInterceptor from '@/interceptors/custom.interceptor';
 import CommonDto from './dto/common.dto';
 import GetOwnOrdersDto from './dto/getOwnOrders.dto';
 import PayOrderDto from './dto/payOrder.dto';
@@ -43,6 +51,7 @@ export default class OrdersController extends BaseController {
   }
 
   @Post('list')
+  // @UseInterceptors(CustomInterceptor)
   async list(@Body() dto: GetOwnOrdersDto, @Req() req: any) {
     const res = await this.ordersService.getOwnOrders({
       ...dto,

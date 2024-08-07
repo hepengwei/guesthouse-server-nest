@@ -3,6 +3,7 @@ import { MoreThanOrEqual, LessThanOrEqual, Like } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Guesthouse from './guesthouse.entity';
+import { format } from 'date-fns';
 
 @Injectable()
 export default class GuesthouseService {
@@ -13,7 +14,7 @@ export default class GuesthouseService {
 
   async getHot() {
     const res = await this.guesthouseRepository.find({
-      select: ['id', 'name', 'des', 'price'],
+      select: ['id', 'name', 'des', 'price', 'showCount'],
       relations: {
         imgs: true,
       },
@@ -35,6 +36,7 @@ export default class GuesthouseService {
     }
     const res = await this.guesthouseRepository.findAndCount({
       where,
+      select: ['id', 'name', 'des', 'price', 'showCount'],
       relations: {
         imgs: true,
       },
@@ -48,7 +50,7 @@ export default class GuesthouseService {
     };
   }
 
-  async detail(id: string) {
+  async detail(id: number) {
     if (!id) {
       throw new BadRequestException('缺少ID');
     }
@@ -73,6 +75,16 @@ export default class GuesthouseService {
       ])
       .where('guesthouse.id = :id', { id })
       .getOne();
+
+    // 转换时间格式
+    const dateFormat = 'yyyy-MM-dd HH:mm:ss';
+    // @ts-ignore
+    res.startTime = format(res.startTime, dateFormat);
+    // @ts-ignore
+    res.endTime = format(res.endTime, dateFormat);
+    // @ts-ignore
+    res.createdAt = format(res.createdAt, dateFormat);
+
     return res;
   }
 }

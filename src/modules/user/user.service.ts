@@ -13,7 +13,7 @@ export default class UserService {
   ) {}
 
   async regist(userName: string, password: string) {
-    const user = await this._getUser(userName, password);
+    const user = await this._getUser(userName);
     if (user) {
       throw new HttpException('用户已存在', 500);
     }

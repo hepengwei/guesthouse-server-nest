@@ -6,6 +6,7 @@ import {
   Min,
   IsDateString,
 } from 'class-validator';
+import AllowEmptyString from '@/utils/validator/AllowEmptyString';
 
 export default class SearchGuesthouseDto {
   @Min(1, {
@@ -61,7 +62,7 @@ export default class SearchGuesthouseDto {
   @IsString({
     message: '城市编号应该为字符串类型',
   })
-  @IsOptional()
+  @AllowEmptyString()
   cityCode?: string;
 
   @IsString({
