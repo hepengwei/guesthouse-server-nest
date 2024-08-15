@@ -36,6 +36,7 @@
     "class-validator": "^0.14.1",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
+    "ioredis": "^5.4.1",
     "md5": "^2.3.0",
     "mysql2": "^3.10.2",
     "nest-winston": "^1.10.0",

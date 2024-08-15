@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { myMd5 } from '@/utils/util';
+import RedisService from '../redis/redis.service';
 import User from './user.entity';
 
 @Injectable()
@@ -10,6 +11,7 @@ export default class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
   ) {}
 
   async regist(userName: string, password: string) {
@@ -32,13 +34,17 @@ export default class UserService {
     }
     const payload = { userId: user.userId, userName: user.userName };
     const token = this.jwtService.sign(payload);
-    // TODO 还要将Token保持到Redis中
+    // 还要将Token保存到Redis中
+    if (this.redisService.getValue(user.userName)) {
+      this.redisService.deleteValue(user.userName);
+    }
+    this.redisService.setValue(user.userName, token, 6 * 60 * 60);
     return { ...user, token: `Bearer ${token}` };
   }
 
-  async logout(userId: number) {
-    // TODO 将Redis中保存的Token删除
-    console.log(userId);
+  async logout(userName: string) {
+    // 将Redis中保存的Token删除
+    this.redisService.deleteValue(userName);
   }
 
   async updateUserInfo(params) {

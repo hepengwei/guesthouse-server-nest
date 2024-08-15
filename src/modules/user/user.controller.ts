@@ -32,8 +32,8 @@ export default class UserController extends BaseController {
   @Get('logout')
   @UseGuards(AuthGuard('jwt'))
   async logout(@Req() req: any) {
-    const { userId } = req.user;
-    await this.userService.logout(userId);
+    const { userName } = req.user;
+    await this.userService.logout(userName);
     return this.success();
   }
 
