@@ -1,13 +1,16 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import BaseController from '../base/base.controller';
 
 @Controller('common')
+@ApiTags('公共接口模块')
 export default class CommonController extends BaseController {
   constructor() {
     super();
   }
 
   @Get('getCitys')
+  @ApiOperation({ summary: '获取名宿的城市列表' })
   getCitys() {
     return this.success([
       { label: '所有', value: 'all' },

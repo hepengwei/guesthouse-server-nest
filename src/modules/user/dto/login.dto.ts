@@ -1,6 +1,8 @@
 import { IsString, IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export default class LoginDto {
+  @ApiProperty({ description: '用户名' })
   @IsString({
     message: `用户名应该为字符串类型`,
   })
@@ -9,6 +11,7 @@ export default class LoginDto {
   })
   userName: string;
 
+  @ApiProperty({ description: '密码' })
   @IsString({
     message: `密码应该为字符串类型`,
   })
