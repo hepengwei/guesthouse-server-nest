@@ -33,13 +33,14 @@ export default class UserService {
       throw new HttpException('用户名或密码不正确', 500);
     }
     const payload = { userId: user.userId, userName: user.userName };
-    const token = this.jwtService.sign(payload);
+    let token = this.jwtService.sign(payload);
     // 还要将Token保存到Redis中
     if (this.redisService.getValue(user.userName)) {
       this.redisService.deleteValue(user.userName);
     }
-    this.redisService.setValue(user.userName, token, 6 * 60 * 60);
-    return { ...user, token: `Bearer ${token}` };
+    token = `Bearer ${token}`;
+    this.redisService.setValue(user.userName, token, 12 * 60 * 60);
+    return { ...user, token };
   }
 
   async logout(userName: string) {
