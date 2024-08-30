@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Orders from './orders.entity';
 import Guesthouse from '../guesthouse/guesthouse.entity';
-import { format } from 'date-fns';
 
 @Injectable()
 export default class OrdersService {
@@ -84,15 +83,6 @@ export default class OrdersService {
       .take(params.pageSize)
       .skip(params.pageSize * (params.pageNum - 1))
       .getManyAndCount();
-
-    // 转换时间格式
-    const dateFormat = 'yyyy-MM-dd HH:mm:ss';
-    res[0].forEach((item) => {
-      if (item.createdAt) {
-        // @ts-ignore
-        item.createdAt = format(item.createdAt, dateFormat);
-      }
-    });
 
     return {
       list: res[0],

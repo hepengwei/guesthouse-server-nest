@@ -10,24 +10,26 @@ import {
 import Comment from '../comment/comment.entity';
 import { ConfigService } from '@nestjs/config';
 import { myMd5 } from '@/utils/util';
+import { Exclude } from 'class-transformer';
 
 // 用户表
 @Entity()
 export default class User {
   constructor(readonly configService: ConfigService) {}
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '用户ID' })
   userId: number;
 
-  @Column({ length: 20 })
+  @Column({ comment: '用户名', length: 20 })
   userName: string;
 
-  @Column({ length: 40 })
+  @Column({ comment: '密码', length: 40 })
   password: string;
 
-  @Column({ nullable: true })
+  @Column({ comment: '用户头像', nullable: true })
   avatar: string;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ comment: '手机号', length: 20, nullable: true })
+  @Exclude()
   phone: string;
 
   @CreateDateColumn()

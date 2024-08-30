@@ -1,3 +1,6 @@
+/**
+ * 全局过滤器，捕获所有异常
+ */
 import {
   ArgumentsHost,
   Catch,

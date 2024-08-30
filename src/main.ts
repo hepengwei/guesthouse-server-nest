@@ -16,7 +16,7 @@ async function bootstrap() {
     }),
   );
 
-  // 接入Swagger文档（项目运行后，访问localhost:7001/doc可查看文档）
+  // 接入Swagger文档（项目运行后，访问localhost:7001/doc.html可查看文档）
   const swaggerOptions = new DocumentBuilder()
     .setTitle('guesthouse-server-nest API文档')
     .setDescription('guesthouse-server-nest API文档')
@@ -24,7 +24,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerOptions);
-  SwaggerModule.setup('doc', app, document);
+  SwaggerModule.setup('doc.html', app, document);
 
   await app.listen(7001);
 }

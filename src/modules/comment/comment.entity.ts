@@ -13,10 +13,10 @@ import Guesthouse from '../guesthouse/guesthouse.entity';
 // 评论表
 @Entity()
 export default class Comment {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '评论ID' })
   id: number;
 
-  @Column()
+  @Column({ comment: '评论内容' })
   msg: string;
 
   @CreateDateColumn()

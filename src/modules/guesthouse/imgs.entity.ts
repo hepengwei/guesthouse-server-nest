@@ -12,10 +12,10 @@ import Guesthouse from './guesthouse.entity';
 // 民宿图片表
 @Entity()
 export default class Imgs {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '图片ID' })
   id: number;
 
-  @Column({ length: 150 })
+  @Column({ comment: '图片地址', length: 150 })
   url: string;
 
   @CreateDateColumn()

@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { IsInt, Min, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -12,6 +13,7 @@ export default class PaginationDto {
   @IsNotEmpty({
     message: 'pageNum为必填项',
   })
+  @Expose()
   pageNum: number;
 
   @ApiProperty({ description: '每页多少条数据', default: 10 })
@@ -24,5 +26,6 @@ export default class PaginationDto {
   @IsNotEmpty({
     message: 'pageSize为必填项',
   })
+  @Expose()
   pageSize: number;
 }

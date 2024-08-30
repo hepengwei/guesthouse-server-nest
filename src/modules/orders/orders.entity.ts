@@ -12,13 +12,13 @@ import Guesthouse from '../guesthouse/guesthouse.entity';
 // 订单表
 @Entity()
 export default class Orders {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '订单ID' })
   id: number;
 
-  @Column()
+  @Column({ comment: '订单所属用户的ID' })
   userId: number;
 
-  @Column()
+  @Column({ comment: '是否已支付' })
   isPayed: number = 0; // 是否支付，0未支付, 1已支付
 
   @CreateDateColumn()

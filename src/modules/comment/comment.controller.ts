@@ -1,11 +1,19 @@
 import { Controller, Post, UseGuards, Body, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import BaseController from '../base/base.controller';
+import CreateCommentDto from './dto/createComment.dto';
+import ResponseDto from '@/commonDto/response.dto';
 import CommentService from './comment.service';
 
 @Controller('comment')
 @ApiTags('评论模块')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 export default class CommentController extends BaseController {
   constructor(private commentService: CommentService) {
@@ -14,7 +22,8 @@ export default class CommentController extends BaseController {
 
   @Post('create')
   @ApiOperation({ summary: '创建评论' })
-  async create(@Body() dto: any, @Req() req: any) {
+  @ApiOkResponse({ type: ResponseDto })
+  async create(@Body() dto: CreateCommentDto, @Req() req: any) {
     const { guesthouseId, msg } = dto;
     await this.commentService.create({
       guesthouseId,
