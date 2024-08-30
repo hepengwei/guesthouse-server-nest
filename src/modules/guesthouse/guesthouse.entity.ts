@@ -14,31 +14,31 @@ import Orders from '../orders/orders.entity';
 // 民宿表
 @Entity()
 export default class Guesthouse {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ comment: '民宿ID' })
   id: number;
 
-  @Column({ length: 50 })
+  @Column({ comment: '民宿名', length: 50 })
   name: string;
 
-  @Column({ length: 150, nullable: true })
+  @Column({ comment: '民宿描述', length: 150, nullable: true })
   des: string;
 
-  @Column({ length: 100 })
+  @Column({ comment: '地址', length: 100 })
   address: string;
 
-  @Column()
+  @Column({ comment: '价格' })
   price: number;
 
-  @Column({ length: 10 })
+  @Column({ comment: '所在城市Code', length: 10 })
   cityCode: string;
 
-  @Column()
+  @Column({ comment: '被浏览次数' })
   showCount: number = 0;
 
-  @Column()
+  @Column({ comment: '开始出租时间' })
   startTime: Date;
 
-  @Column()
+  @Column({ comment: '结束出租时间' })
   endTime: Date;
 
   @CreateDateColumn()

@@ -1,10 +1,26 @@
-import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import SerializeInterceptor from '@/interceptors/serialize.interceptor';
 import BaseController from '../base/base.controller';
+import ResponseDto from '@/commonDto/response.dto';
 import RegistUserDto from './dto/registUser.dto';
 import LoginDto from './dto/login.dto';
 import UpdateUserInfoDto from './dto/updateUserInfo.dto';
+import LoginResponseDto from './responseDto/loginResponse.dto';
 import UserService from './user.service';
 
 @Controller('user')
@@ -16,6 +32,7 @@ export default class UserController extends BaseController {
 
   @Post('regist')
   @ApiOperation({ summary: '注册' })
+  @ApiOkResponse({ type: ResponseDto })
   async regist(@Body() dto: RegistUserDto) {
     const { userName, password } = dto;
     await this.userService.regist(userName, password);
@@ -24,6 +41,8 @@ export default class UserController extends BaseController {
 
   @Post('login')
   @ApiOperation({ summary: '登录' })
+  @ApiOkResponse({ type: LoginResponseDto })
+  @UseInterceptors(new SerializeInterceptor(LoginResponseDto))
   async login(@Body() dto: LoginDto) {
     const { userName, password } = dto;
     const data = await this.userService.login(userName, password);
@@ -35,6 +54,8 @@ export default class UserController extends BaseController {
 
   @Get('logout')
   @ApiOperation({ summary: '退出登录' })
+  @ApiOkResponse({ type: ResponseDto })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   async logout(@Req() req: any) {
     const { userName } = req.user;
@@ -44,6 +65,8 @@ export default class UserController extends BaseController {
 
   @Post('updateUserInfo')
   @ApiOperation({ summary: '修改用户信息' })
+  @ApiOkResponse({ type: ResponseDto })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   async updateUserInfo(@Body() dto: UpdateUserInfoDto, @Req() req: any) {
     const { avatar = null, phone = null } = dto;

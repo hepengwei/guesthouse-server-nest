@@ -1,3 +1,6 @@
+/**
+ * 自定义拦截器，在order.controller.ts文件引用测试过，代码已注释，当前文件暂时无用
+ */
 import {
   CallHandler,
   ExecutionContext,
