@@ -1,11 +1,6 @@
-import { Controller, Post, UseGuards, Body, Req } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiOkResponse,
-} from '@nestjs/swagger';
+import { Controller, Post, Body, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import JwtGuard from '@/decorators/jwtGuard.decorator';
 import BaseController from '../base/base.controller';
 import CreateCommentDto from './dto/createComment.dto';
 import ResponseDto from '@/commonDto/response.dto';
@@ -13,8 +8,7 @@ import CommentService from './comment.service';
 
 @Controller('comment')
 @ApiTags('评论模块')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@JwtGuard()
 export default class CommentController extends BaseController {
   constructor(private commentService: CommentService) {
     super();

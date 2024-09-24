@@ -1,20 +1,7 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  UseGuards,
-  Req,
-  UseInterceptors,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
-import SerializeInterceptor from '@/interceptors/serialize.interceptor';
+import { Controller, Post, Get, Body, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import JwtGuard from '@/decorators/jwtGuard.decorator';
+import SerializeAndApiRes from '@/decorators/serializeAndApiRes.decorator';
 import BaseController from '../base/base.controller';
 import ResponseDto from '@/commonDto/response.dto';
 import RegistUserDto from './dto/registUser.dto';
@@ -41,8 +28,7 @@ export default class UserController extends BaseController {
 
   @Post('login')
   @ApiOperation({ summary: '登录' })
-  @ApiOkResponse({ type: LoginResponseDto })
-  @UseInterceptors(new SerializeInterceptor(LoginResponseDto))
+  @SerializeAndApiRes(LoginResponseDto)
   async login(@Body() dto: LoginDto) {
     const { userName, password } = dto;
     const data = await this.userService.login(userName, password);
@@ -55,8 +41,7 @@ export default class UserController extends BaseController {
   @Get('logout')
   @ApiOperation({ summary: '退出登录' })
   @ApiOkResponse({ type: ResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  @JwtGuard()
   async logout(@Req() req: any) {
     const { userName } = req.user;
     await this.userService.logout(userName);
@@ -66,8 +51,7 @@ export default class UserController extends BaseController {
   @Post('updateUserInfo')
   @ApiOperation({ summary: '修改用户信息' })
   @ApiOkResponse({ type: ResponseDto })
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  @JwtGuard()
   async updateUserInfo(@Body() dto: UpdateUserInfoDto, @Req() req: any) {
     const { avatar = null, phone = null } = dto;
     const { userId } = req.user;

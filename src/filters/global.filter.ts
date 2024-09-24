@@ -32,11 +32,20 @@ export class GlobalFilter implements ExceptionFilter {
     } else if (exception instanceof ForbiddenException) {
       response.status(200).json(createResponseData(403, '暂无权限'));
     } else if (exception instanceof BadRequestException) {
+      const errorData = this._createErrorData(exception, request);
+      this.logger.warn(JSON.stringify(errorData), exception.stack);
       response.status(200).json(
         createResponseData(
           status || 500,
           // @ts-ignore
-          exception.response?.message[0] || exception.message,
+          exception.response?.message
+            ? // @ts-ignore
+              exception.response.message instanceof Array
+              ? // @ts-ignore
+                exception.response?.message[0]
+              : // @ts-ignore
+                exception.response?.message
+            : exception.message,
         ),
       );
     } else if (exception instanceof HttpException) {

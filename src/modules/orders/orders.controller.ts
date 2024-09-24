@@ -1,19 +1,7 @@
-import {
-  Controller,
-  Post,
-  UseGuards,
-  Body,
-  Req,
-  UseInterceptors,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiOkResponse,
-} from '@nestjs/swagger';
-import SerializeInterceptor from '@/interceptors/serialize.interceptor';
+import { Controller, Post, Body, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import JwtGuard from '@/decorators/jwtGuard.decorator';
+import SerializeAndApiRes from '@/decorators/serializeAndApiRes.decorator';
 import BaseController from '../base/base.controller';
 // import CustomInterceptor from '@/interceptors/custom.interceptor';
 import ResponseDto from '@/commonDto/response.dto';
@@ -26,8 +14,7 @@ import OrdersService from './orders.service';
 
 @Controller('orders')
 @ApiTags('订单模块')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@JwtGuard()
 export default class OrdersController extends BaseController {
   constructor(private ordersService: OrdersService) {
     super();
@@ -35,8 +22,7 @@ export default class OrdersController extends BaseController {
 
   @Post('hasOrder')
   @ApiOperation({ summary: '判断民宿是否被预定' })
-  @ApiOkResponse({ type: HasOrderResponseDto })
-  @UseInterceptors(new SerializeInterceptor(HasOrderResponseDto))
+  @SerializeAndApiRes(HasOrderResponseDto)
   async hasOrder(@Body() dto: CommonDto, @Req() req: any) {
     const { guesthouseId } = dto;
     const res = await this.ordersService.hasOrder({
@@ -72,8 +58,7 @@ export default class OrdersController extends BaseController {
   @Post('list')
   @ApiOperation({ summary: '获取自己的订单列表' })
   // @UseInterceptors(CustomInterceptor)
-  @ApiOkResponse({ type: GetOwnOrdersResponseDto })
-  @UseInterceptors(new SerializeInterceptor(GetOwnOrdersResponseDto))
+  @SerializeAndApiRes(GetOwnOrdersResponseDto)
   async list(@Body() dto: GetOwnOrdersDto, @Req() req: any) {
     const res = await this.ordersService.getOwnOrders({
       ...dto,

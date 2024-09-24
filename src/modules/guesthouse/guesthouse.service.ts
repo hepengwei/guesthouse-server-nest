@@ -50,7 +50,7 @@ export default class GuesthouseService {
   }
 
   async detail(id: number) {
-    if (!id) {
+    if (!id && id !== 0) {
       throw new BadRequestException('缺少ID');
     }
     const res = await this.guesthouseRepository
