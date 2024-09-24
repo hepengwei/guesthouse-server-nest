@@ -4,18 +4,12 @@ import {
   Post,
   Body,
   Param,
-  UseGuards,
   ParseIntPipe,
-  UseInterceptors,
+  DefaultValuePipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
-import SerializeInterceptor from '@/interceptors/serialize.interceptor';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import JwtGuard from '@/decorators/jwtGuard.decorator';
+import SerializeAndApiRes from '@/decorators/serializeAndApiRes.decorator';
 import BaseController from '../base/base.controller';
 import GetHotResponseDto from './responseDto/getHotResponse.dto';
 import SearchGuesthouseDto from './dto/searchGuesthouse.dto';
@@ -32,8 +26,7 @@ export default class GuesthouseController extends BaseController {
 
   @Get('getHot')
   @ApiOperation({ summary: '获取最热名宿列表' })
-  @ApiOkResponse({ type: GetHotResponseDto })
-  @UseInterceptors(new SerializeInterceptor(GetHotResponseDto))
+  @SerializeAndApiRes(GetHotResponseDto)
   async getHot() {
     const res = await this.guesthouseService.getHot();
     return this.success(res);
@@ -41,8 +34,7 @@ export default class GuesthouseController extends BaseController {
 
   @Post('search')
   @ApiOperation({ summary: '搜索名宿' })
-  @ApiOkResponse({ type: SearchResponseDto })
-  @UseInterceptors(new SerializeInterceptor(SearchResponseDto))
+  @SerializeAndApiRes(SearchResponseDto)
   async search(@Body() dto: SearchGuesthouseDto) {
     const res = await this.guesthouseService.search(dto);
     return this.success(res);
@@ -50,11 +42,9 @@ export default class GuesthouseController extends BaseController {
 
   @Get('detail/:id')
   @ApiOperation({ summary: '获取名宿详情' })
-  @ApiOkResponse({ type: DetailResponseDto })
-  @UseInterceptors(new SerializeInterceptor(DetailResponseDto))
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  async detail(@Param('id', ParseIntPipe) id: number) {
+  @SerializeAndApiRes(DetailResponseDto)
+  @JwtGuard()
+  async detail(@Param('id', new DefaultValuePipe(0), ParseIntPipe) id: number) {
     const res = await this.guesthouseService.detail(id);
     return this.success(res);
   }
